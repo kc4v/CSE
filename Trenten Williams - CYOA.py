@@ -210,7 +210,7 @@ door = Room("Door", None, None, "hallway", None, "Just ran inside after being ch
                                                  "the house for the keys to the shed since I forgot to take \n"
                                                  "them, but I got to be ready for anything, I still don't know if \n"
                                                  "there inside, I need to find a weapon and close all the windows \n"
-                                                 "so this place can be safe again, for now I have to find a weapon.")
+                                                 "so this place can be safe again, for now I have to find a weapon.", 0, 0)
 hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the West or go to the \n"
                                                              "Kitchen to the South, or just go back to the door."
                                                              "We need to go upstairs to get the key to the \n"
@@ -231,7 +231,8 @@ hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", 
                                                                                 "east but I hear sound in there, or \n"
                                                                                 "just go to the master bedroom to \n"
                                                                                 "the south, there is another \n"
-                                                                                "hallway to the East.")
+                                                                                "hallway to the East.", 3,
+                [Chainsaw, Headphones])
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
@@ -306,4 +307,8 @@ while True:
 
     else:
         print("Command not recognized")
-    print()
+        print()
+
+    if "health" in command:
+        print(player.health)
+
