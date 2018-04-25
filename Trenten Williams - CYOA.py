@@ -193,10 +193,12 @@ class Room(object):
 
 
 axe = Axe("Huntress Axe", 66, 568, 2, 87)
+chainsaw = Chainsaw("Hillbilly's Chainsaw", 530, 14235, 1, 100)
+headphones = Headphones("My Headphones", 5, 50, 1, 55)
 
-player = Character("Eren Jaeger", "Hello", 5, [], 80, 5, 100, 3, None, "Has been born inside of walls created by\n"
-                                                                       " mankind, a colossal titan has broken \n"
-                                                                       "down the wall \n"
+player = Character("Eren Jaeger", "Hello", 5, [], 80, 5, 100, axe, None, "Has been born inside of walls created by \n"
+                                                                         "mankind, a colossal titan has broken down \n"
+                                                                         "the wall \n"
                    "where his family and himself lived and were, the debris got his mom stuck and broke her legs, \n"
                    "then a titan got to her since there was a guy that was to much a coward to fight it and ate her, \n"
                    "now he has to find a key in a house to save himself and others to fight back.")
@@ -210,7 +212,8 @@ door = Room("Door", None, None, "hallway", None, "Just ran inside after being ch
                                                  "the house for the keys to the shed since I forgot to take \n"
                                                  "them, but I got to be ready for anything, I still don't know if \n"
                                                  "there inside, I need to find a weapon and close all the windows \n"
-                                                 "so this place can be safe again, for now I have to find a weapon.", 0, 0)
+                                                 "so this place can be safe again, for now I have to find a weapon.",
+            0, 0)
 hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the West or go to the \n"
                                                              "Kitchen to the South, or just go back to the door."
                                                              "We need to go upstairs to get the key to the \n"
@@ -232,7 +235,7 @@ hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", 
                                                                                 "just go to the master bedroom to \n"
                                                                                 "the south, there is another \n"
                                                                                 "hallway to the East.", 3,
-                [Chainsaw, Headphones])
+                [chainsaw, headphones])
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
@@ -305,10 +308,9 @@ while True:
         print(len(player.inventory))
         print()
 
+    elif command == "health":
+        print(player.health)
+
     else:
         print("Command not recognized")
         print()
-
-    if "health" in command:
-        print(player.health)
-
