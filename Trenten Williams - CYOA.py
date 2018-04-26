@@ -87,6 +87,11 @@ class Drop(Item):
         print("You have dropped %s" % self.name)
 
 
+class Key(Item):
+    def __init__(self, name, weight, value, durability, damage):
+        super(key, self).__init__("shed key", 0, 58, 1, 0)
+
+
 class Combination(Item):
     def __init__(self, name, weight, value, durability, damage):
         super(Combination, self).__init__(name, weight, value, durability, damage)
@@ -195,6 +200,8 @@ class Room(object):
 axe = Axe("Huntress Axe", 66, 568, 2, 87)
 chainsaw = Chainsaw("Hillbilly's Chainsaw", 530, 14235, 1, 100)
 headphones = Headphones("My Headphones", 5, 50, 1, 55)
+knife = Knife("Myers Knife", 2, 98009, 1, 100)
+key = Key("The key to the sheds", 0, 58, 1, 0)
 
 player = Character("Eren Jaeger", "Hello", 5, [], 80, 5, 100, axe, None, "Has been born inside of walls created by \n"
                                                                          "mankind, a colossal titan has broken down \n"
@@ -229,7 +236,8 @@ stairs = Room("Stairs", None, "hallway2", "living_Room", "den", "We need to go u
                                                                 "shed(South) but we can get a weapon before \n"
                                                                 "we go, there's a Den to the East.")
 den = Room("Den", "kitchen", None, "stairs", None, "Another window, need to close it.")
-kitchen = Room("Kitchen", "hallway", "den", None, None, "Nice, there is still a knife here.", 0, 1)
+kitchen = Room("Kitchen", "hallway", "den", None, None, "Of course, the kitchen is empty, there might be something \n"
+                                                        "in here.", 0, [knife])
 hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "I can go to the bathroom to the \n"
                                                                                 "east but I hear sound in there, or \n"
                                                                                 "just go to the master bedroom to \n"
@@ -239,7 +247,7 @@ hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", 
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
-bathroom = Room("Bathroom", None, None, None, "hallway2", "Ahhh, why is there a zombie in the bathroom!?", 1, 1)
+bathroom = Room("Bathroom", None, None, None, "hallway2", "Ahhh, why is there a zombie in the bathroom!?", 1, [key])
 room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here, but there is a window \n"
                                                     "so I better close it.")
 room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here, but there is a window \n"
@@ -280,8 +288,8 @@ while True:
                                 "An undead person that goes for human brains."))
                 current_node.enemies -= 1
         else:
-            print("There is nothing to fight here")
-    elif command == "take":
+            print("There is nothing to fight here. -_-")
+    elif command == "any items?":
         found = False
         if len(current_node.item) > 0:
             for item in current_node.item:
@@ -294,9 +302,9 @@ while True:
                     found = True
                     print("You have added it to your inventory.")
             if not found:
-                print("I don't see it here")
+                print("I don't see the item you are looking for here.")
         else:
-            print("There is nothing here")
+            print("There is nothing here. -_-")
 
     elif "take" in command:
         item_requested = command[5:]
