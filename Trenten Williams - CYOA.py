@@ -1,3 +1,6 @@
+debug = 1  # Cheat Mode
+
+
 def fight(enemy):
     print("A %s has appeared!" % enemy.name)
     while player.health > 0 and enemy.health > 0:
@@ -111,6 +114,16 @@ class Chainsaw(Item):
         print("You have the %s" % self.name)
 
 
+class Sniper(Item):
+    def __init__(self):
+        super(Sniper, self).__init__("Glaz's Sniper", 86, 18028, 1000, 1000)
+
+
+class AR(Item):
+    def __init__(self):
+        super(AR, self).__init__("Fortnite Lengendary Scar", 123, 8467, 10000, 100)
+
+
 class Knife(Item):
     def __init__(self):
         super(Knife, self).__init__("Michel Myers Knife", 45, 700, 1, 58)
@@ -148,6 +161,7 @@ class DoorKey(Key):
         global current_node
         if current_node == door:
             door.west = 'outside'
+            door.w = 'outside'
             print("You unlock the door to outside.")
         else:
             print("There is no door to unlock here -_-")
@@ -156,17 +170,15 @@ class DoorKey(Key):
 class ShedKey(Key):
     def __init__(self):
         super(ShedKey, self).__init__()
-
-    def use(self):
+    @staticmethod
+    def use():
         global current_node
         if current_node == outside:
-            outside.west = 'shed'
+            outside.west = 'shed_door'
+            outside.w = 'shed_door'
             print("You unlock the door to the shed, pick a gun.")
         else:
             print("There is no door to unlock here -_-")
-
-
-
 
 
 class Character(object):
@@ -236,14 +248,19 @@ headphones = Headphones()
 knife = Knife()
 door_key = DoorKey()
 shed_key = ShedKey()
+sniper = Sniper
+Assault_Rifle = AR
 
-
-player = Character("Eren Jaeger", "Hello", 5, [], 80, 5, 100, axe, None, "Has been born inside of walls created by \n"
-                                                                         "mankind, a colossal titan has broken down \n"
-                                                                         "the wall \n"
-                   "where his family and himself lived and were, the debris got his mom stuck and broke her legs, \n"
-                   "then a titan got to her since there was a guy that was to much a coward to fight it and ate her, \n"
-                   "now he has to find a key in a house to save himself and others to fight back.")
+player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, axe, None, "Has been born inside of walls created \n"
+                                                                            "by mankind, a colossal titan has \n"
+                                                                            "broken down the wall where his family \n"
+                                                                            "and himself lived and were, the debris \n"
+                                                                            "got his mom stuck and broke her legs, \n"
+                                                                            "then a titan got to her since there \n"
+                                                                            "was a guy that was to much a coward to \n"
+                                                                            "fight it and ate her, how he has to \n"
+                                                                            "find a key in a house to save himself \n"
+                                                                            "and others to fight back.")
 
 
 enemy = Character("Zombie", None, None, None, None, None, 100, axe, "unlimited", "An undead person that goes for \n"
@@ -266,13 +283,11 @@ hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the cl
 closet = Room("Closet", None, "living_room", None, "hallway", "I'm at the closet, there might be something inside, \n"
                                                               "if not I can go to the living room to the south.", 0,
               [axe])
-living_room = Room("Living Room", "closet", None, None, "stairs", "There are 2 windows in here, I better close \n"
-                                                                  "them before zombies crawl through, OHH! One was \n"
-                                                                  "hiding behind the couch!!!", 1)
+living_room = Room("Living Room", "closet", None, None, "stairs", "This place looks nice with no zombies", 1)
 stairs = Room("Stairs", None, "hallway2", "living_Room", "den", "We need to go upstairs to get the key to the \n"
                                                                 "shed(South) but we can get a weapon before \n"
                                                                 "we go, there's a Den to the East.")
-den = Room("Den", "kitchen", None, "stairs", None, "Another window, need to close it.")
+den = Room("Den", "kitchen", None, "stairs", None, "This den is s big.")
 kitchen = Room("Kitchen", "hallway", "den", None, None, "Of course, the kitchen is empty, there might be something \n"
                                                         "in here.", 0, [knife])
 hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "I can go to the bathroom to the \n"
@@ -284,31 +299,38 @@ hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", 
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
-bathroom = Room("Bathroom", None, None, None, "hallway2", "Ahhh, why is there a zombie in the bathroom!?", 1, [door_key])
-room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here, but there is a window \n"
-                                                    "so I better close it.")
-room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here, but there is a window \n"
-                                                    "so I better close it.")
-room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here, but there is a window \n"
-                                                    "so I better close it after I kill this zombie.", 1)
+bathroom = Room("Bathroom", None, None, None, "hallway2", "Here is the key", 1, [door_key])
+room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here.")
+room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here.")
+room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here.", 1)
 master_bedroom = Room("Master_Bedroom", "hallway2", None, None, None, "The key is not in here also, \n"
                                                                       "but there is a window so I better close it af\n"
                                                                       "ter I kill these 3 zombies.")
 shed_door = Room("Shed_Door", None, None, None, "hallway4", "I finally got in the shed, now I have to grab a gun.")
-hallway4 = Room("Hallway4", "sniper Room", "assault Room", "shed_door", None, "There is snipers to the North \n"
+hallway4 = Room("Hallway4", "sniper_room", "assault_room", "shed_door", None, "There is snipers to the North \n"
                                                                               "and some assault rifles to the South.")
-assault_room = Room("Assault_Room", "hallway", None, None, None, "ok, seems like going with the assault rifles.")
-sniper_room = Room("Sniper_Room", None, "hallway4", None, None, "ok, seems like going with the snipers rifles.")
-outside = Room("Outside", None, "Shed2", "Shed_Door", None, "Ok, now I have to fights these 5 zombies then choose a \n"
+assault_room = Room("Assault_Room", "hallway", None, None, None, "ok, seems like going with the assault rifles.", 0,
+                    [Assault_Rifle])
+sniper_room = Room("Sniper_Room", None, "hallway4", None, None, "ok, seems like going with the snipers rifles.", 0,
+                   [sniper])
+outside = Room("Outside", None, "Shed2", "Shed_Door", None, "Ok, now I have to choose a \n"
                                                             "shed to grab a weapon from.", 5)
 
 directions = ['north', "n", 'south', "s", 'east', "e", 'west', "w"]
 current_node = door
 Items = []
+if debug == 1:
+    player.inventory = [door_key, shed_key]
+    player.weapon = Axe()
+    player.weapon.damage = 90000
 while player.health > 0:
     if current_node.enemies > 0:
         # Enemies exist
         while current_node.enemies > 0 and player.health:
+            if debug == 1:
+                print("You automatically win")
+                current_node.enemies = 0
+                continue
             fight(Character("Zombie", None, None, None, 20, None, 100, axe, "unlimited",
                             "An undead person that goes for human brains."))
             current_node.enemies -= 1
@@ -342,6 +364,13 @@ while player.health > 0:
         else:
             print("There is nothing here. -_-")
 
+    elif "item" in command:
+        item_requested = [Sniper and AR]
+        for item in current_node.item:
+            if item.name == item_requested:
+                player.take(current_node.item)
+                quit(0)
+
     elif "take" in command:
         item_requested = command[5:]
         for item in current_node.item:
@@ -358,7 +387,11 @@ while player.health > 0:
     elif command == 'use key':
         for key in player.inventory:
             if isinstance(key, Key):
-                key.use()
+                if current_node == outside and isinstance(key, ShedKey):
+                    key.use()
+                elif current_node == door and isinstance(key, DoorKey):
+                    key.use()
+
             else:
                 print("You don't have a key.")
 
