@@ -1,4 +1,4 @@
-debug = 1  # Cheat Mode
+# debug = 1  # Cheat Mode
 
 
 def fight(enemy):
@@ -213,11 +213,11 @@ class Character(object):
             total_dmg = 0
         self.health -= total_dmg
 
-    def inventory_use(self, item):
+    def inventory_use(self):
         self.inventory.remove(item)
 
-    def take(self, item):
-        self.inventory.append(item)
+    def take(self):
+        self.inventory.append()
 
 
 class Room(object):
@@ -251,16 +251,16 @@ shed_key = ShedKey()
 sniper = Sniper
 Assault_Rifle = AR
 
-player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, axe, None, "Has been born inside of walls created \n"
-                                                                            "by mankind, a colossal titan has \n"
-                                                                            "broken down the wall where his family \n"
-                                                                            "and himself lived and were, the debris \n"
-                                                                            "got his mom stuck and broke her legs, \n"
-                                                                            "then a titan got to her since there \n"
-                                                                            "was a guy that was to much a coward to \n"
-                                                                            "fight it and ate her, how he has to \n"
-                                                                            "find a key in a house to save himself \n"
-                                                                            "and others to fight back.")
+player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, None, None, "Has been born inside of walls created \n"
+                                                                             "by mankind, a colossal titan has \n"
+                                                                             "broken down the wall where his family \n"
+                                                                             "and himself lived and were, the debris \n"
+                                                                             "got his mom stuck and broke her legs, \n"
+                                                                             "then a titan got to her since there \n"
+                                                                             "was a guy that was to much a coward to \n"
+                                                                             "fight it and ate her, how he has to \n"
+                                                                             "find a key in a house to save himself \n"
+                                                                             "and others to fight back.")
 
 
 enemy = Character("Zombie", None, None, None, None, None, 100, axe, "unlimited", "An undead person that goes for \n"
@@ -273,8 +273,7 @@ door = Room("Door", None, None, "hallway", None, "Just ran inside after being ch
                                                  "survive, but I got to be ready for anything, I still don't \n"
                                                  "know if there inside, I need to find a weapon and close all \n"
                                                  "the windows so this place can be safe again, for now I have \n"
-                                                 "to find a weapon.",
-            0, 0)
+                                                 "to find a weapon.", 0, 0)
 hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the West or go to the \n"
                                                              "Kitchen to the South, or just go back to the door."
                                                              "We need to go upstairs to get the key to the \n"
@@ -287,14 +286,10 @@ living_room = Room("Living Room", "closet", None, None, "stairs", "This place lo
 stairs = Room("Stairs", None, "hallway2", "living_Room", "den", "We need to go upstairs to get the key to the \n"
                                                                 "shed(South) but we can get a weapon before \n"
                                                                 "we go, there's a Den to the East.")
-den = Room("Den", "kitchen", None, "stairs", None, "This den is s big.")
+den = Room("Den", "kitchen", None, "stairs", None, "This den is big.")
 kitchen = Room("Kitchen", "hallway", "den", None, None, "Of course, the kitchen is empty, there might be something \n"
                                                         "in here.", 0, [knife])
-hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "I can go to the bathroom to the \n"
-                                                                                "east but I hear sound in there, or \n"
-                                                                                "just go to the master bedroom to \n"
-                                                                                "the south, there is another \n"
-                                                                                "hallway to the East.", 3,
+hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "Where is the Dang Key!!!", 3,
                 [chainsaw, headphones])
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
@@ -302,10 +297,8 @@ hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go bac
 bathroom = Room("Bathroom", None, None, None, "hallway2", "Here is the key", 1, [door_key])
 room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here.")
 room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here.")
-room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here.", 1)
-master_bedroom = Room("Master_Bedroom", "hallway2", None, None, None, "The key is not in here also, \n"
-                                                                      "but there is a window so I better close it af\n"
-                                                                      "ter I kill these 3 zombies.")
+room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here too.", 1)
+master_bedroom = Room("Master_Bedroom", "hallway2", None, None, None, "The key is not in here also.")
 shed_door = Room("Shed_Door", None, None, None, "hallway4", "I finally got in the shed, now I have to grab a gun.")
 hallway4 = Room("Hallway4", "sniper_room", "assault_room", "shed_door", None, "There is snipers to the North \n"
                                                                               "and some assault rifles to the South.")
@@ -319,19 +312,20 @@ outside = Room("Outside", None, "Shed2", "Shed_Door", None, "Ok, now I have to c
 directions = ['north', "n", 'south', "s", 'east', "e", 'west', "w"]
 current_node = door
 Items = []
-if debug == 1:
-    player.inventory = [door_key, shed_key]
-    player.weapon = Axe()
-    player.weapon.damage = 90000
+
+# if debug == 1:
+    # player.inventory = [door_key, shed_key]
+    # player.weapon = Axe()
+    # player.weapon.damage = 90000
 while player.health > 0:
     if current_node.enemies > 0:
         # Enemies exist
         while current_node.enemies > 0 and player.health:
-            if debug == 1:
-                print("You automatically win")
-                current_node.enemies = 0
-                continue
-            fight(Character("Zombie", None, None, None, 20, None, 100, axe, "unlimited",
+            #if debug == 1:
+                #print("You automatically win")
+                #current_node.enemies = 0
+                #continue
+            fight(Character("Zombie", None, None, None, 20, None, 100, None, "unlimited",
                             "An undead person that goes for human brains."))
             current_node.enemies -= 1
     print(player.health)
@@ -347,12 +341,12 @@ while player.health > 0:
         except KeyError:
             print("You cannot go this way.")
 
-    elif command == "any items?":
+    elif command == "take":
         found = False
         if len(current_node.item) > 0:
             for item in current_node.item:
                 print(item.name)
-            cmd = input("Which item?").lower()
+            cmd = input("Which item do you want to put in your inventory").lower()
             for item in current_node.item:
                 if cmd == item.name.lower():
                     player.take(item)
@@ -393,7 +387,7 @@ while player.health > 0:
                     key.use()
 
             else:
-                print("You don't have a key.")
+                print("You don't have a key. -_-")
 
     else:
         print("Command not recognized")
