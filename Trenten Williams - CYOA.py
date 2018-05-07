@@ -1,4 +1,24 @@
-# debug = 1  # Cheat Mode
+from tkinter import *
+root = Tk()
+root.title("Trenten!!!!!")
+label = Label(root, text="Hello and Welcome!")
+label.pack()
+root.mainloop()
+from tkinter import *
+from Image import 
+window = Tk()
+
+window.title("Join")
+window.geometry("300x300")
+window.configure(background='grey')
+
+imageFile = "download"
+
+window.im1 = Image.open(imageFile)
+
+
+window.mainloop()
+debug = 0  # Cheat Mode
 
 
 def fight(enemy):
@@ -216,8 +236,8 @@ class Character(object):
     def inventory_use(self):
         self.inventory.remove(item)
 
-    def take(self):
-        self.inventory.append()
+    def take(self, item):
+        self.inventory.append(item)
 
 
 class Room(object):
@@ -313,18 +333,18 @@ directions = ['north', "n", 'south', "s", 'east', "e", 'west', "w"]
 current_node = door
 Items = []
 
-# if debug == 1:
-    # player.inventory = [door_key, shed_key]
-    # player.weapon = Axe()
-    # player.weapon.damage = 90000
+if debug == 1:
+    player.inventory = [door_key, shed_key]
+    player.weapon = Axe()
+    player.weapon.damage = 90000
 while player.health > 0:
     if current_node.enemies > 0:
         # Enemies exist
         while current_node.enemies > 0 and player.health:
-            #if debug == 1:
-                #print("You automatically win")
-                #current_node.enemies = 0
-                #continue
+            if debug == 1:
+                print("You automatically win")
+                current_node.enemies = 0
+                continue
             fight(Character("Zombie", None, None, None, 20, None, 100, None, "unlimited",
                             "An undead person that goes for human brains."))
             current_node.enemies -= 1
