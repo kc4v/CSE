@@ -1,24 +1,23 @@
-from tkinter import *
-root = Tk()
-root.title("Trenten!!!!!")
-label = Label(root, text="Hello and Welcome!")
-label.pack()
-root.mainloop()
-from tkinter import *
-from Image import 
-window = Tk()
-
-window.title("Join")
-window.geometry("300x300")
-window.configure(background='grey')
-
-imageFile = "download"
-
-window.im1 = Image.open(imageFile)
-
-
-window.mainloop()
-debug = 0  # Cheat Mode
+# from tkinter import *
+# from Image import *
+# root = Tk()
+# root.title("Trenten!!!!!")
+# label = Label(root, text="Hello and Welcome!")
+# label.pack()
+# root.mainloop()
+# window = Tk()
+#
+# window.title("Join")
+# window.geometry("800x800")
+# window.configure(background='grey')
+#
+# imageFile = "download"
+# p[]
+# window.im1 = Image.open("flat,800x800,070,f.u3.jpg")
+#
+#
+# window.mainloop()
+debug = 1  # Cheat Mode
 
 
 def fight(enemy):
@@ -139,9 +138,9 @@ class Sniper(Item):
         super(Sniper, self).__init__("Glaz's Sniper", 86, 18028, 1000, 1000)
 
 
-class AR(Item):
+class Assault_Rifle(Item):
     def __init__(self):
-        super(AR, self).__init__("Fortnite Lengendary Scar", 123, 8467, 10000, 100)
+        super(Assault_Rifle, self).__init__("Fortnite Legendary Scar", 123, 8467, 10000, 100)
 
 
 class Knife(Item):
@@ -268,8 +267,8 @@ headphones = Headphones()
 knife = Knife()
 door_key = DoorKey()
 shed_key = ShedKey()
-sniper = Sniper
-Assault_Rifle = AR
+sniper = Sniper()
+assault_rifle = Assault_Rifle()
 
 player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, None, None, "Has been born inside of walls created \n"
                                                                              "by mankind, a colossal titan has \n"
@@ -323,7 +322,7 @@ shed_door = Room("Shed_Door", None, None, None, "hallway4", "I finally got in th
 hallway4 = Room("Hallway4", "sniper_room", "assault_room", "shed_door", None, "There is snipers to the North \n"
                                                                               "and some assault rifles to the South.")
 assault_room = Room("Assault_Room", "hallway", None, None, None, "ok, seems like going with the assault rifles.", 0,
-                    [Assault_Rifle])
+                    [assault_rifle])
 sniper_room = Room("Sniper_Room", None, "hallway4", None, None, "ok, seems like going with the snipers rifles.", 0,
                    [sniper])
 outside = Room("Outside", None, "Shed2", "Shed_Door", None, "Ok, now I have to choose a \n"
@@ -374,16 +373,17 @@ while player.health > 0:
                     found = True
                     print("You have added it to your inventory.")
             if not found:
-                print("I don't see the item you are looking for here.")
+                print("I don't see the item you are looking for here. -_-")
         else:
             print("There is nothing here. -_-")
 
     elif "item" in command:
-        item_requested = [Sniper and AR]
+        item_requested = [Sniper]
+        item_requested = [Assault_Rifle]
         for item in current_node.item:
             if item.name == item_requested:
                 player.take(current_node.item)
-                quit(0)
+            quit(0)
 
     elif "take" in command:
         item_requested = command[5:]
@@ -392,8 +392,9 @@ while player.health > 0:
                 player.take(current_node.item)
 
     elif command == "inventory":
-        print(len(player.inventory))
-        print()
+        for item in player.inventory:
+            print(len(player.inventory))
+            # print(item.name)
 
     elif command == "health":
         print(player.health)
@@ -412,3 +413,4 @@ while player.health > 0:
     else:
         print("Command not recognized")
         print()
+
