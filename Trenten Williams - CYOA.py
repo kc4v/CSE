@@ -1,5 +1,5 @@
 # from tkinter import *
-# from Image import *
+# import image
 # root = Tk()
 # root.title("Trenten!!!!!")
 # label = Label(root, text="Hello and Welcome!")
@@ -11,13 +11,12 @@
 # window.geometry("800x800")
 # window.configure(background='grey')
 #
-# imageFile = "download"
-# p[]
-# window.im1 = Image.open("flat,800x800,070,f.u3.jpg")
-#
+# imageFile = "flat,800x800,070,f.u3.jpg"
+# window.im1 = image.open(imageFile)
 #
 # window.mainloop()
-debug = 1  # Cheat Mode
+
+debug = 0  # Cheat Mode
 
 
 def fight(enemy):
@@ -219,6 +218,8 @@ class Character(object):
     def attack(self, target):
         print("%s attacks %s" % (self.name, target.name))
         target.take_damage(self.weapon.damage)
+        if not item in player.inventory:
+            print("You can't fight with no weapon, You died")
 
     def limit(self, inventory):
         inventory.limit = 8
@@ -337,6 +338,9 @@ if debug == 1:
     player.weapon = Axe()
     player.weapon.damage = 90000
 while player.health > 0:
+    if sniper in player.inventory or assault_rifle in player.inventory:
+        print("You have finished part 1 of my game. GJ")
+        quit(0)
     if current_node.enemies > 0:
         # Enemies exist
         while current_node.enemies > 0 and player.health:
@@ -347,7 +351,9 @@ while player.health > 0:
             fight(Character("Zombie", None, None, None, 20, None, 100, None, "unlimited",
                             "An undead person that goes for human brains."))
             current_node.enemies -= 1
+    print("---Health---")
     print(player.health)
+    print("---Place---")
     print(current_node.name)
     print(current_node.description)
     command = input('>_')
@@ -377,14 +383,6 @@ while player.health > 0:
         else:
             print("There is nothing here. -_-")
 
-    elif "item" in command:
-        item_requested = [Sniper]
-        item_requested = [Assault_Rifle]
-        for item in current_node.item:
-            if item.name == item_requested:
-                player.take(current_node.item)
-            quit(0)
-
     elif "take" in command:
         item_requested = command[5:]
         for item in current_node.item:
@@ -393,10 +391,13 @@ while player.health > 0:
 
     elif command == "inventory":
         for item in player.inventory:
-            print(len(player.inventory))
-            # print(item.name)
+            # print(len(player.inventory))
+            print(item.name)
+        else:
+            print("You have nothing in you inventory. -_-")
 
     elif command == "health":
+        print("Health")
         print(player.health)
 
     elif command == 'use key':
