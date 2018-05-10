@@ -124,6 +124,11 @@ class Axe(Item):
         print("You have the %s" % self.name)
 
 
+class Nothing(Item):
+    def __init__(self):
+        super(Nothing, self).__init__("Nothing", 0, 0, 0, 0)
+
+
 class Chainsaw(Item):
     def __init__(self):
         super(Chainsaw, self).__init__("Hillbilly's Chainsaw", 134, 690, 3, 100)
@@ -262,7 +267,7 @@ class Room(object):
         current_node = globals()[getattr(self, direction)]
 
 
-axe = Axe()
+axe = Axe()o
 chainsaw = Chainsaw()
 headphones = Headphones()
 knife = Knife()
@@ -270,17 +275,9 @@ door_key = DoorKey()
 shed_key = ShedKey()
 sniper = Sniper()
 assault_rifle = Assault_Rifle()
+nothing = Nothing()
 
-player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, None, None, "Has been born inside of walls created \n"
-                                                                             "by mankind, a colossal titan has \n"
-                                                                             "broken down the wall where his family \n"
-                                                                             "and himself lived and were, the debris \n"
-                                                                             "got his mom stuck and broke her legs, \n"
-                                                                             "then a titan got to her since there \n"
-                                                                             "was a guy that was to much a coward to \n"
-                                                                             "fight it and ate her, how he has to \n"
-                                                                             "find a key in a house to save himself \n"
-                                                                             "and others to fight back.")
+player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, Nothing, None, None)
 
 
 enemy = Character("Zombie", None, None, None, None, None, 100, axe, "unlimited", "An undead person that goes for \n"
@@ -408,8 +405,8 @@ while player.health > 0:
                 elif current_node == door and isinstance(key, DoorKey):
                     key.use()
 
-            else:
-                print("You don't have a key. -_-")
+        else:
+            print("You don't have a key. -_-")
 
     else:
         print("Command not recognized")
