@@ -30,6 +30,7 @@ def fight(enemy):
             print("You hesitate")
         if enemy.health > 0:
             enemy.attack(player)
+        if cmd == 
 
 
 class Item(object):
@@ -116,7 +117,7 @@ class Combination(Item):
         print("You have created %s" % self.name)
 
 
-class Axe(Item):
+class Axe(Weapons):
     def __init__(self):
         super(Axe, self).__init__("Huntress Axe", 66, 568, 2, 87)
 
@@ -124,12 +125,12 @@ class Axe(Item):
         print("You have the %s" % self.name)
 
 
-class Nothing(Item):
+class Nothing(Weapons):
     def __init__(self):
         super(Nothing, self).__init__("Nothing", 0, 0, 0, 0)
 
 
-class Chainsaw(Item):
+class Chainsaw(Weapons):
     def __init__(self):
         super(Chainsaw, self).__init__("Hillbilly's Chainsaw", 134, 690, 3, 100)
 
@@ -137,32 +138,32 @@ class Chainsaw(Item):
         print("You have the %s" % self.name)
 
 
-class Sniper(Item):
+class Sniper(Weapons):
     def __init__(self):
         super(Sniper, self).__init__("Glaz's Sniper", 86, 18028, 1000, 1000)
 
 
-class Assault_Rifle(Item):
+class AssaultRifle(Weapons):
     def __init__(self):
-        super(Assault_Rifle, self).__init__("Fortnite Legendary Scar", 123, 8467, 10000, 100)
+        super(AssaultRifle, self).__init__("Fortnite Legendary Scar", 123, 8467, 10000, 100)
 
 
-class Knife(Item):
+class Knife(Weapons):
     def __init__(self):
         super(Knife, self).__init__("Michel Myers Knife", 45, 700, 1, 58)
 
 
-class Bow(Item):
+class Bow(Weapons):
     def __init__(self):
         super(Bow, self).__init__("Warframe Bow", 10, 267, 3, 80)
 
 
-class NinjaStars(Item):
+class NinjaStars(Weapons):
     def __init__(self):
         super(NinjaStars, self).__init__("Genji's Ninja Stars", 4, 409, 2, 60)
 
 
-class Headphones(Item):
+class Headphones(Weapons):
     def __init__(self):
         super(Headphones, self).__init__("My headphones", 2, 70, 1, 13)
 
@@ -223,7 +224,7 @@ class Character(object):
     def attack(self, target):
         print("%s attacks %s" % (self.name, target.name))
         target.take_damage(self.weapon.damage)
-        if not item in player.inventory:
+        if Weapons in player.inventory:
             print("You can't fight with no weapon, You died")
 
     def limit(self, inventory):
@@ -237,9 +238,11 @@ class Character(object):
         if total_dmg < 0:
             total_dmg = 0
         self.health -= total_dmg
+        if self.health < 0:
+            self.health = 0
 
     def inventory_use(self):
-        self.inventory.remove(item)
+        self.inventory.remove(Weapons)
 
     def take(self, item):
         self.inventory.append(item)
@@ -267,17 +270,17 @@ class Room(object):
         current_node = globals()[getattr(self, direction)]
 
 
-axe = Axe()o
+axe = Axe()
 chainsaw = Chainsaw()
 headphones = Headphones()
 knife = Knife()
 door_key = DoorKey()
 shed_key = ShedKey()
 sniper = Sniper()
-assault_rifle = Assault_Rifle()
+assault_rifle = AssaultRifle()
 nothing = Nothing()
 
-player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, Nothing, None, None)
+player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, nothing, None, None)
 
 
 enemy = Character("Zombie", None, None, None, None, None, 100, axe, "unlimited", "An undead person that goes for \n"
@@ -345,12 +348,14 @@ while player.health > 0:
                 print("You automatically win")
                 current_node.enemies = 0
                 continue
-            fight(Character("Zombie", None, None, None, 20, None, 100, None, "unlimited",
-                            "An undead person that goes for human brains."))
+            fight(Character("Zombie", None, None, None, 20, None, 100, axe, "unlimited", None))
             current_node.enemies -= 1
     print("---Health---")
     print(player.health)
     print("---Place---")
+    if player.health <= 0:
+        print("You have died.")
+        quit(0)
     print(current_node.name)
     print(current_node.description)
     command = input('>_')
@@ -366,13 +371,13 @@ while player.health > 0:
     elif command == "take":
         found = False
         if len(current_node.item) > 0:
-            for item in current_node.item:
-                print(item.name)
+            for Weapons in current_node.item:
+                print(Weapons.name)
             cmd = input("Which item do you want to put in your inventory").lower()
-            for item in current_node.item:
-                if cmd == item.name.lower():
-                    player.take(item)
-                    current_node.item.remove(item)
+            for Weapons in current_node.item:
+                if cmd == Weapons.name.lower():
+                    player.take(Weapons)
+                    current_node.item.remove(Weapons)
                     found = True
                     print("You have added it to your inventory.")
             if not found:
@@ -381,21 +386,17 @@ while player.health > 0:
             print("There is nothing here. -_-")
 
     elif "take" in command:
-        item_requested = command[5:]
-        for item in current_node.item:
-            if item.name == item_requested:
+        Weapons_requested = command[5:]
+        for Weapons in current_node.item:
+            if Weapons.name == Weapons_requested:
                 player.take(current_node.item)
 
     elif command == "inventory":
-        for item in player.inventory:
+        for Weapons in player.inventory:
             # print(len(player.inventory))
-            print(item.name)
+            print(Weapons.name)
         else:
             print("You have nothing in you inventory. -_-")
-
-    elif command == "health":
-        print("Health")
-        print(player.health)
 
     elif command == 'use key':
         for key in player.inventory:
@@ -411,4 +412,3 @@ while player.health > 0:
     else:
         print("Command not recognized")
         print()
-
