@@ -1,3 +1,4 @@
+import random
 # from tkinter import *
 # import image
 # root = Tk()
@@ -26,11 +27,18 @@ def fight(enemy):
         cmd = input(">_ ")
         if cmd == 'attack':
             player.attack(enemy)
+        if cmd == "health":
+            print(player.health)
+        if cmd == "enemy health":
+            print(enemy.health)
         else:
             print("You hesitate")
         if enemy.health > 0:
             enemy.attack(player)
-        if cmd == 
+        if cmd == 'run':
+            if random.randint(0, 100) < 50:
+                print("You run away")
+                break
 
 
 class Item(object):
@@ -168,6 +176,11 @@ class Headphones(Weapons):
         super(Headphones, self).__init__("My headphones", 2, 70, 1, 13)
 
 
+class Apple(Consumable):
+    def __init__(self):
+        super(Apple, self).__init__("Apple", 2, 5, 1, 0)
+
+
 class Key(Item):
     def __init__(self):
         super(Key, self).__init__("Key", 0, 58, 1, 0)
@@ -180,6 +193,7 @@ class Key(Item):
 class DoorKey(Key):
     def __init__(self):
         super(DoorKey, self).__init__()
+
     @staticmethod
     def use():
         global current_node
@@ -194,6 +208,7 @@ class DoorKey(Key):
 class ShedKey(Key):
     def __init__(self):
         super(ShedKey, self).__init__()
+
     @staticmethod
     def use():
         global current_node
@@ -270,6 +285,7 @@ class Room(object):
         current_node = globals()[getattr(self, direction)]
 
 
+apple = Apple()
 axe = Axe()
 chainsaw = Chainsaw()
 headphones = Headphones()
@@ -308,7 +324,7 @@ stairs = Room("Stairs", None, "hallway2", "living_Room", "den", "We need to go u
                                                                 "we go, there's a Den to the East.")
 den = Room("Den", "kitchen", None, "stairs", None, "This den is big.")
 kitchen = Room("Kitchen", "hallway", "den", None, None, "Of course, the kitchen is empty, there might be something \n"
-                                                        "in here.", 0, [knife])
+                                                        "in here.", 0, [knife, apple])
 hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "Where is the Dang Key!!!", 3,
                 [chainsaw, headphones])
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
@@ -361,6 +377,8 @@ while player.health > 0:
     command = input('>_')
     if command == 'quit':
         quit(0)
+
+    if command == "eat apple":
 
     if command in directions:
         try:
