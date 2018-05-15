@@ -239,14 +239,21 @@ class Character(object):
     def attack(self, target):
         print("%s attacks %s" % (self.name, target.name))
         target.take_damage(self.weapon.damage)
-        if Weapons in player.inventory:
-            print("You can't fight with no weapon, You died")
 
     def limit(self, inventory):
         inventory.limit = 8
 
     def abilities(self, limit):
         limit.abilities = 5
+
+    def heal(self, amt):
+        if apple in player.inventory:
+            self.health += amt
+            if self.health > 100:
+                self.health = 100
+            self.inventory.remove(apple)
+        else:
+            print("You need a apple to eat a apple -_-. So I have to say")
 
     def take_damage(self, dmg):
         total_dmg = dmg - self.armor_reduction
@@ -309,7 +316,8 @@ door = Room("Door", None, None, "hallway", None, "Just ran inside after being ch
                                                  "survive, but I got to be ready for anything, I still don't \n"
                                                  "know if there inside, I need to find a weapon and close all \n"
                                                  "the windows so this place can be safe again, for now I have \n"
-                                                 "to find a weapon.", 0, 0)
+                                                 "to find a weapon. But I have to look in every room because it can\n"
+                                                 " have something useful.", 0, 0)
 hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the West or go to the \n"
                                                              "Kitchen to the South, or just go back to the door."
                                                              "We need to go upstairs to get the key to the \n"
@@ -379,6 +387,7 @@ while player.health > 0:
         quit(0)
 
     if command == "eat apple":
+        player.heal(45)
 
     if command in directions:
         try:
