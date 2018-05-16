@@ -23,7 +23,7 @@ debug = 0  # Cheat Mode
 def fight(enemy):
     print("A %s has appeared!" % enemy.name)
     while player.health > 0 and enemy.health > 0:
-        print("What do you want to do?")
+        print("What do you want to do? -_-")
         cmd = input(">_ ")
         if cmd == 'attack':
             player.attack(enemy)
@@ -37,8 +37,12 @@ def fight(enemy):
             enemy.attack(player)
         if cmd == 'run':
             if random.randint(0, 100) < 50:
-                print("You run away")
-                break
+                print("RUN AWAY!!!!!")
+                print(" -----  _0_/")
+                print(" ----- / | ")
+                print(" -----  / \ ")
+                return 1
+    return 0
 
 
 class Item(object):
@@ -327,9 +331,9 @@ closet = Room("Closet", None, "living_room", None, "hallway", "I'm at the closet
                                                               "if not I can go to the living room to the south.", 0,
               [axe])
 living_room = Room("Living Room", "closet", None, None, "stairs", "This place looks nice with no zombies", 1)
-stairs = Room("Stairs", None, "hallway2", "living_Room", "den", "We need to go upstairs to get the key to the \n"
-                                                                "shed(South) but we can get a weapon before \n"
-                                                                "we go, there's a Den to the East.")
+stairs = Room("Stairs", None, "hallway2", "living_room", "den", "We need to go upstairs to get the key to the \n"
+                                                                "shed(South), there is a den to the east so there \n"
+                                                                "might be something in there..")
 den = Room("Den", "kitchen", None, "stairs", None, "This den is big.")
 kitchen = Room("Kitchen", "hallway", "den", None, None, "Of course, the kitchen is empty, there might be something \n"
                                                         "in here.", 0, [knife, apple])
@@ -339,7 +343,7 @@ hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go bac
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
 bathroom = Room("Bathroom", None, None, None, "hallway2", "Here is the key", 1, [door_key])
-room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here.")
+room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here.", 0, [apple])
 room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here.")
 room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here too.", 1)
 master_bedroom = Room("Master_Bedroom", "hallway2", None, None, None, "The key is not in here also.")
@@ -362,18 +366,29 @@ if debug == 1:
     player.weapon = Axe()
     player.weapon.damage = 90000
 while player.health > 0:
+    run_cmd = 0
     if sniper in player.inventory or assault_rifle in player.inventory:
         print("You have finished part 1 of my game. GJ")
         quit(0)
     if current_node.enemies > 0:
         # Enemies exist
-        while current_node.enemies > 0 and player.health:
+        while current_node.enemies > 0 and player.health and run_cmd == 0:
             if debug == 1:
                 print("You automatically win")
                 current_node.enemies = 0
                 continue
-            fight(Character("Zombie", None, None, None, 20, None, 100, axe, "unlimited", None))
-            current_node.enemies -= 1
+            run_cmd = fight(Character("Zombie", None, None, None, 20, None, 100, axe, "unlimited", None))
+            if run_cmd == 0:
+                current_node.enemies -= 1
+    if run_cmd == 1:
+        previous_node = current_node
+        while previous_node == current_node:
+            try:
+                direction = random.choice(directions)
+                current_node.move(direction)
+            except KeyError:
+                pass
+        continue
     print("---Health---")
     print(player.health)
     print("---Place---")
@@ -393,7 +408,7 @@ while player.health > 0:
         try:
             current_node.move(command)
         except KeyError:
-            print("You cannot go this way.")
+            print("You cannot go this way. -_-")
 
     elif command == "take":
         found = False
@@ -437,5 +452,5 @@ while player.health > 0:
             print("You don't have a key. -_-")
 
     else:
-        print("Command not recognized")
+        print("Command not recognized -_-, so make a command that I can recognize.")
         print()
