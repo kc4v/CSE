@@ -24,13 +24,11 @@ def fight(enemy):
     print("A %s has appeared!" % enemy.name)
     while player.health > 0 and enemy.health > 0:
         print("What do you want to do? -_-")
+        print("You have %d health left" % player.health)
+        print("%s has %d health left" % (enemy.name, enemy.health))
         cmd = input(">_ ")
-        if cmd == 'attack':
+        if cmd == 'fight':
             player.attack(enemy)
-        if cmd == "health":
-            print(player.health)
-        if cmd == "enemy health":
-            print(enemy.health)
         else:
             print("You hesitate")
         if enemy.health > 0:
@@ -38,9 +36,9 @@ def fight(enemy):
         if cmd == 'run':
             if random.randint(0, 100) < 50:
                 print("RUN AWAY!!!!!")
-                print(" -----  _0_/")
-                print(" ----- / | ")
-                print(" -----  / \ ")
+                print(" ----->  _0_/")
+                print(" -----> / | ")
+                print(" ----->  / \ ")
                 return 1
     return 0
 
@@ -321,7 +319,7 @@ door = Room("Door", None, None, "hallway", None, "Just ran inside after being ch
                                                  "know if there inside, I need to find a weapon and close all \n"
                                                  "the windows so this place can be safe again, for now I have \n"
                                                  "to find a weapon. But I have to look in every room because it can\n"
-                                                 " have something useful.", 0, 0)
+                                                 " have something useful.", 0, None)
 hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the West or go to the \n"
                                                              "Kitchen to the South, or just go back to the door."
                                                              "We need to go upstairs to get the key to the \n"
@@ -342,6 +340,9 @@ hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", 
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
+if Key in player.inventory:
+    current_node.(Key)
+
 bathroom = Room("Bathroom", None, None, None, "hallway2", "Here is the key", 1, [door_key])
 room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here.", 0, [apple])
 room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here.")
@@ -410,7 +411,7 @@ while player.health > 0:
         except KeyError:
             print("You cannot go this way. -_-")
 
-    elif command == "take":
+    elif command == "scout":
         found = False
         if len(current_node.item) > 0:
             for Weapons in current_node.item:
@@ -433,11 +434,23 @@ while player.health > 0:
             if Weapons.name == Weapons_requested:
                 player.take(current_node.item)
 
+    elif 'equip' in command:
+        equipment_name = command[6:]
+        for item in player.inventory:
+            if item.name.lower() == equipment_name.lower():
+                player.weapon = item
+                print("You have just equipped the %s." % Weapons.name)
+                print("-----Damage-----")
+                print(player.weapon.damage)
+
+        else:
+            print("You have to chose a weapon to equip. -_-")
+
     elif command == "inventory":
         for Weapons in player.inventory:
             # print(len(player.inventory))
             print(Weapons.name)
-        else:
+        if len(player.inventory) == 0:
             print("You have nothing in you inventory. -_-")
 
     elif command == 'use key':
