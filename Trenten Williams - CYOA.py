@@ -1,4 +1,5 @@
 import random
+
 # from tkinter import *
 # import image
 # root = Tk()
@@ -29,12 +30,16 @@ def fight(enemy):
         cmd = input(">_ ")
         if cmd == 'fight':
             player.attack(enemy)
+            if player.equip == Weapons:
+                Weapons.durability -= 1
+            else:
+                print("")
         else:
             print("You hesitate")
         if enemy.health > 0:
             enemy.attack(player)
         if cmd == 'run':
-            if random.randint(0, 100) < 50:
+            if random.randint(0, 100) < 25:
                 print("RUN AWAY!!!!!")
                 print(" ----->  _0_/")
                 print(" -----> / | ")
@@ -129,20 +134,20 @@ class Combination(Item):
 
 class Axe(Weapons):
     def __init__(self):
-        super(Axe, self).__init__("Huntress Axe", 66, 568, 2, 87)
+        super(Axe, self).__init__("Huntress Axe", 66, 568, 1, 87)
 
     def axe(self):
         print("You have the %s" % self.name)
 
 
-class Nothing(Weapons):
+class Hands(Weapons):
     def __init__(self):
-        super(Nothing, self).__init__("Nothing", 0, 0, 0, 0)
+        super(Hands, self).__init__("Hands", 0, 0, 1000000000, 1)
 
 
 class Chainsaw(Weapons):
     def __init__(self):
-        super(Chainsaw, self).__init__("Hillbilly's Chainsaw", 134, 690, 3, 100)
+        super(Chainsaw, self).__init__("Hillbilly's Chainsaw", 134, 690, 3, 200)
 
     def chainsaw(self):
         print("You have the %s" % self.name)
@@ -150,7 +155,7 @@ class Chainsaw(Weapons):
 
 class Sniper(Weapons):
     def __init__(self):
-        super(Sniper, self).__init__("Glaz's Sniper", 86, 18028, 1000, 1000)
+        super(Sniper, self).__init__("Glaz's Sniper", 86, 18028, 10000, 1000)
 
 
 class AssaultRifle(Weapons):
@@ -160,12 +165,12 @@ class AssaultRifle(Weapons):
 
 class Knife(Weapons):
     def __init__(self):
-        super(Knife, self).__init__("Michel Myers Knife", 45, 700, 1, 58)
+        super(Knife, self).__init__("Michel Myers Knife", 45, 700, 1, 27)
 
 
 class Bow(Weapons):
     def __init__(self):
-        super(Bow, self).__init__("Warframe Bow", 10, 267, 3, 80)
+        super(Bow, self).__init__("Warframe Bow", 10, 267, 3, 44)
 
 
 class NinjaStars(Weapons):
@@ -232,8 +237,11 @@ class Character(object):
         self.description = description
         self.talk_others = talk
         self.limit_have = limit
+        if armor is None:
+            armor = 0
         self.armor_reduction = armor
         self.uses = uses
+        self.equip = []
 
     def talk(self):
         print("Hello")
@@ -272,8 +280,15 @@ class Character(object):
         self.inventory.append(item)
 
 
+class Boss(Character):
+    def __init__(self):
+        super(Boss, self).__init__("Zombie", None, None, None, None, None, 10000, axe, "unlimited", None)
+
+
 class Room(object):
-    def __init__(self, name, north, south, east, west, description, enemies=0, items=None):
+    def __init__(self, name, north, south, east, west, description, enemies=None, items=None):
+        if enemies is None:
+            enemies = []
         if items is None:
             items = []
         self.name = name
@@ -287,6 +302,7 @@ class Room(object):
         self.w = west
         self.description = description
         self.enemies = enemies
+        self.boss = Boss
         self.item = items
 
     def move(self, direction):
@@ -303,10 +319,11 @@ door_key = DoorKey()
 shed_key = ShedKey()
 sniper = Sniper()
 assault_rifle = AssaultRifle()
-nothing = Nothing()
+hands = Hands()
+boss1 = Boss()
+boss2 = Boss()
 
-player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, nothing, None, None)
-
+player = Character("Soul collector", "Hello", 5, [], 80, 5, 100, hands, None, None)
 
 enemy = Character("Zombie", None, None, None, None, None, 100, axe, "unlimited", "An undead person that goes for \n"
                                                                                  "human brains.")
@@ -319,44 +336,65 @@ door = Room("Door", None, None, "hallway", None, "Just ran inside after being ch
                                                  "know if there inside, I need to find a weapon and close all \n"
                                                  "the windows so this place can be safe again, for now I have \n"
                                                  "to find a weapon. But I have to look in every room because it can\n"
-                                                 " have something useful.", 0, None)
-hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the West or go to the \n"
-                                                             "Kitchen to the South, or just go back to the door."
+                                                 " have something useful.", None, None)
+hallway = Room("Hallway", None, "kitchen", "closet", "door", "I can go to the closet to the East or go to the \n"
+                                                             "Kitchen to the South, or just go back to the door(West)."
                                                              "We need to go upstairs to get the key to the \n"
-                                                             "shed but we can get a weapon before we go, there's \n"
-                                                             "a Den to the East.")
+                                                             "shed.")
 closet = Room("Closet", None, "living_room", None, "hallway", "I'm at the closet, there might be something inside, \n"
-                                                              "if not I can go to the living room to the south.", 0,
+                                                              "if not I can go to the living room to the south.", None,
               [axe])
-living_room = Room("Living Room", "closet", None, None, "stairs", "This place looks nice with no zombies", 1)
+living_room = Room("Living Room", "closet", None, None, "stairs", "This place looks nice with no zombies",
+                   [Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                              "An undead person that goes for \nhuman brains.")])
 stairs = Room("Stairs", None, "hallway2", "living_room", "den", "We need to go upstairs to get the key to the \n"
-                                                                "shed(South), there is a den to the east so there \n"
-                                                                "might be something in there..")
-den = Room("Den", "kitchen", None, "stairs", None, "This den is big.")
-kitchen = Room("Kitchen", "hallway", "den", None, None, "Of course, the kitchen is empty, there might be something \n"
-                                                        "in here.", 0, [knife, apple])
-hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "Where is the Dang Key!!!", 3,
+                                                                "shed(South), there is a den to the West, there \n"
+                                                                "might be something in there...")
+den = Room("Den", "kitchen", None, "stairs", None, "This den is big just like my friends house.", boss2)
+kitchen = Room("Kitchen", "hallway", "den", None, None, "There might be something \n"
+                                                        "in here.", None, [knife, apple])
+hallway2 = Room("Hallway2", "stairs", "master_Bedroom", "bathroom", "hallway3", "Where is the Key!, there is another \n"
+                                                                                "hallway to the west and there is a \n"
+                                                                                "bathroom to the east, or just go \n"
+                                                                                "back downstairs -_-(North).",
+                [Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                           "An undead person that goes for human brains."),
+                 Character("Zombie", None, None, None, None, None, 100, axe, "unlimited", "An undead person that "
+                                                                                          "goes for \n human brains."),
+                 Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                           "An undead person that goes for \nhuman brains.")
+                 ],
                 [chainsaw, headphones])
 hallway3 = Room("Hallway3", "room1", "room3", "hallway2", "room2", "I can go back to the second hallway to the \n"
                                                                    "West, or go to room3 to the North, \n"
                                                                    "room2 to the South or room1 to the east.")
-if Key in player.inventory:
-    current_node.(Key)
 
-bathroom = Room("Bathroom", None, None, None, "hallway2", "Here is the key", 1, [door_key])
-room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here.", 0, [apple])
+bathroom = Room("Bathroom", None, None, None, "hallway2", "Here is the key, but WHY WAS THERE A ZOMBIE HULK \n"
+                                                          "IN HERE!!!!????", [boss1], [door_key])
+room1 = Room("Room1", None, "hallway3", None, None, "The key is not in here also.", None, [apple])
 room2 = Room("Room2", None, None, "hallway3", None, "The key is not in here.")
-room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here too.", 1)
+room3 = Room("Room3", "hallway3", None, None, None, "The key is not in here too.", None)
 master_bedroom = Room("Master_Bedroom", "hallway2", None, None, None, "The key is not in here also.")
 shed_door = Room("Shed_Door", None, None, None, "hallway4", "I finally got in the shed, now I have to grab a gun.")
 hallway4 = Room("Hallway4", "sniper_room", "assault_room", "shed_door", None, "There is snipers to the North \n"
                                                                               "and some assault rifles to the South.")
-assault_room = Room("Assault_Room", "hallway", None, None, None, "ok, seems like going with the assault rifles.", 0,
+assault_room = Room("Assault_Room", "hallway", None, None, None, "ok, seems like going with the assault rifles.", None,
                     [assault_rifle])
-sniper_room = Room("Sniper_Room", None, "hallway4", None, None, "ok, seems like going with the snipers rifles.", 0,
+sniper_room = Room("Sniper_Room", None, "hallway4", None, None, "ok, seems like going with the snipers rifles.", None,
                    [sniper])
-outside = Room("Outside", None, "Shed2", "Shed_Door", None, "Ok, now I have to choose a \n"
-                                                            "shed to grab a weapon from.", 5)
+outside = Room("Outside", None, "Shed2", "Shed_Door", None, "Ok, since I killed the zombies in the way, I can get \n"
+                                                            "in the shed.",
+               [Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                          "An undead person that goes for \nhuman brains."),
+                Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                          "An undead person that goes for \nhuman brains."),
+                Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                          "An undead person that goes for \nhuman brains."),
+                Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                          "An undead person that goes for \nhuman brains."),
+                Character("Zombie", None, None, None, None, None, 100, axe, "unlimited",
+                          "An undead person that goes for \nhuman brains.")
+                ])
 
 directions = ['north', "n", 'south', "s", 'east', "e", 'west', "w"]
 current_node = door
@@ -371,16 +409,16 @@ while player.health > 0:
     if sniper in player.inventory or assault_rifle in player.inventory:
         print("You have finished part 1 of my game. GJ")
         quit(0)
-    if current_node.enemies > 0:
-        # Enemies exist
-        while current_node.enemies > 0 and player.health and run_cmd == 0:
+    if len(current_node.enemies) > 0:
+        # Enemies exist)
+        while len(current_node.enemies) > 0 and player.health and run_cmd == 0:
             if debug == 1:
                 print("You automatically win")
                 current_node.enemies = 0
                 continue
-            run_cmd = fight(Character("Zombie", None, None, None, 20, None, 100, axe, "unlimited", None))
+            run_cmd = fight(current_node.enemies[0])
             if run_cmd == 0:
-                current_node.enemies -= 1
+                current_node.enemies.pop(0)
     if run_cmd == 1:
         previous_node = current_node
         while previous_node == current_node:
@@ -402,15 +440,6 @@ while player.health > 0:
     if command == 'quit':
         quit(0)
 
-    if command == "eat apple":
-        player.heal(45)
-
-    if command in directions:
-        try:
-            current_node.move(command)
-        except KeyError:
-            print("You cannot go this way. -_-")
-
     elif command == "scout":
         found = False
         if len(current_node.item) > 0:
@@ -428,6 +457,11 @@ while player.health > 0:
         else:
             print("There is nothing here. -_-")
 
+    if command in directions:
+        try:
+            current_node.move(command)
+        except KeyError:
+            print("You cannot go this way. -_-")
     elif "take" in command:
         Weapons_requested = command[5:]
         for Weapons in current_node.item:
@@ -435,21 +469,28 @@ while player.health > 0:
                 player.take(current_node.item)
 
     elif 'equip' in command:
+        found = False
         equipment_name = command[6:]
         for item in player.inventory:
             if item.name.lower() == equipment_name.lower():
                 player.weapon = item
+                found = True
                 print("You have just equipped the %s." % Weapons.name)
                 print("-----Damage-----")
                 print(player.weapon.damage)
-
-        else:
+                print("----------------")
+                # print("-----Durability-----")
+                # print(Weapons.durability)
+                # print("--------------------")
+        if not found:
             print("You have to chose a weapon to equip. -_-")
 
     elif command == "inventory":
         for Weapons in player.inventory:
             # print(len(player.inventory))
+            print("-----Inventory-----")
             print(Weapons.name)
+            print("-------------------")
         if len(player.inventory) == 0:
             print("You have nothing in you inventory. -_-")
 
@@ -463,7 +504,10 @@ while player.health > 0:
 
         else:
             print("You don't have a key. -_-")
-
+    elif command == "eat apple":
+        if apple in player.inventory:
+            player.heal(45)
+        else:
+            print("You don't have a apple to eat.")
     else:
         print("Command not recognized -_-, so make a command that I can recognize.")
-        print()
